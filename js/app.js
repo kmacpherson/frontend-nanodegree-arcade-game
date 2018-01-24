@@ -60,8 +60,6 @@ Enemy.prototype.setVariables = function() {
   };
 }
 
-
-
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -86,14 +84,26 @@ var Player = function() {
   this.sprite = 'images/char-cat-girl.png';
 };
 
+// Updates the player. Collision detection.
 Player.prototype.update = function(dt) {
+  allEnemies.forEach(function(enemy) {
 
+    if ((player.y + 21.5) === enemy.y){
+      // Body (not head) width of player seems to 33 and enemy is close to 100.
+      if ((player.x + 35 <= enemy.x + 98) && (player.x + 69 >= enemy.x + 2)) {
+        console.log("Collision => player at: " + player.x + " enemy at " + enemy.x);
+        player.reset();
+      }
+    }
+  });
 };
 
+//Render the image.
 Player.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// Moves the player via keypress.
 Player.prototype.handleInput = function(keycode) {
   switch(keycode) {
     case 'left':
@@ -119,6 +129,13 @@ Player.prototype.handleInput = function(keycode) {
   }
 };
 
+// Resets the player to a start screen.
+Player.prototype.reset = function() {
+  this.x = 202;
+  this.y = 373.5;
+}
+
+//Instatiate player and enemies.
 var player = new Player();
 var allEnemies = [];
 var totalEnemies = 3;
