@@ -1,6 +1,5 @@
 Jan 24
 
-Randomize enemies - amount, location, speed.
 Add win screen.
 Add start screen.
 Add collision detection.

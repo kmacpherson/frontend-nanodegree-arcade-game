@@ -1,13 +1,66 @@
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
 
-    this.x = -101; // -101 minimum for starting to show off screen.
-    this.y = 229; //start -20 + 83 per row. 63, 146 and 229 are valid options in this game.
-    this.movement = 50.5; //Should be between 50.5 slow and 404 fast.
-    this.sprite = 'images/enemy-bug.png';
+  this.x = 1;
+  this.y = 1;
+  this.movement = 1;
+  this.sprite = 'images/enemy-bug.png';
+
 };
+
+//Randomly set the offscreen starting point of the enemy.
+Enemy.prototype.setVariables = function() {
+  let x = Math.floor(Math.random() * Math.floor(3)) + 1;
+  let y = Math.floor(Math.random() * Math.floor(3)) + 1;
+  let movement = Math.floor(Math.random() * Math.floor(2)) + 1;
+
+  // assigns x to one of 4 presets 1=-101, 2=-202, 3=-303 4=-404.
+  switch (x) {
+    case 1:
+      this.x = -101;
+      break;
+    case 2:
+      this.x = -202;
+      break;
+    case 3:
+      this.x = -303;
+      break;
+    case 4:
+      this.x = -404;
+      break;
+  };
+
+  // assigns y to one of the three lanes. 1=63(Top lane), 2=146(middle lane) 3=229(bottom lane).
+  switch (y) {
+    case 1:
+      this.y = 63;
+      break;
+    case 2:
+      this.y = 146;
+      break;
+    case 3:
+      this.y = 229;
+      break;
+  };
+
+  // assigns movement to one of four presets. 1=101, 2=202, 3=303 and 4=404.
+  switch (movement) {
+    case 1:
+      this.movement = 101;
+      break;
+    case 2:
+      this.movement = 202;
+      break;
+    case 3:
+      this.movement = 303;
+      break;
+    case 4:
+      this.movement = 404;
+      break;
+  };
+}
+
+
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -17,7 +70,7 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     this.x = this.x + (this.movement * dt);
     if (this.x > 505) {
-      this.x = -101;
+      this.setVariables();
     }
 };
 
@@ -26,13 +79,11 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Player function
 var Player = function() {
   this.x = 202; // start 0 + 101 per column.
   this.y = 373.5;// Start -41.5 + 83 per row.
-  this.sprite = 'images/char-boy.png';
+  this.sprite = 'images/char-cat-girl.png';
 };
 
 Player.prototype.update = function(dt) {
@@ -68,14 +119,14 @@ Player.prototype.handleInput = function(keycode) {
   }
 };
 
-let player = new Player();
-let allEnemies = [];
-allEnemies.push(new Enemy());
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
-
+var player = new Player();
+var allEnemies = [];
+var totalEnemies = 3;
+for (let i = 0; i < totalEnemies; i++) {
+  let enemy = new Enemy();
+  enemy.setVariables();
+  allEnemies.push(enemy);
+};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
