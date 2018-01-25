@@ -22,11 +22,15 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        gameBoard = doc.getElementById('gameSpace'),
+        gameOverBrd = doc.getElementById('gameOver'),
         lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
+    canvas.classList.add('canvas');
+    gameBoard.appendChild(canvas);
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -161,7 +165,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+      //noop
     }
 
     /* Go ahead and load all of the images we know we're going to need to

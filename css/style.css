@@ -1,3 +1,64 @@
 body {
     text-align: center;
 }
+
+#gameSpace {
+  width: 100%;
+  display: flex;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+#liveTitle {
+  width: 40%;
+  text-align: right;
+  font-size: 1.5em;
+}
+
+#lives {
+  display: flex;
+  width: 60%;
+}
+
+.liveimg {
+  transform: scale(0.5);
+}
+
+.canvas {
+  width: auto;
+}
+
+#gameOver {
+  z-index: 1;
+  border: medium solid black;
+}
+
+.hidden {
+  display: none;
+}
+
+.shown {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  align-content: center;
+  justify-content: center;
+  background-color: #d9dde2;
+}
+
+#gameOverMsg {
+  width: 100%;
+  font-size: 5em;
+  color: #e53e0b;
+}
+
+#gameOverBtn {
+  width: 50%;
+  font-size: 3em;
+}
