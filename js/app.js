@@ -1,64 +1,33 @@
+/*jshint esversion: 6 */
+'use strict';
+
 // Enemies our player must avoid
 var Enemy = function() {
 
-  this.x = 1;
-  this.y = 1;
-  this.movement = 1;
+  this.setVariables();
   this.sprite = 'images/enemy-bug.png';
 
 };
 
 //Randomly set the offscreen starting point of the enemy.
 Enemy.prototype.setVariables = function() {
-  let x = Math.floor(Math.random() * Math.floor(3)) + 1;
-  let y = Math.floor(Math.random() * Math.floor(3)) + 1;
-  let movement = Math.floor(Math.random() * Math.floor(2)) + 1;
-
+  let x, y, movement;
+  let enemyStartX = [-101, -202, -303, -404];
+  let enemyStartY = [63, 146, 229];
+  let enemyStartMov = [101, 202, 303, 404];
   // assigns x to one of 4 presets 1=-101, 2=-202, 3=-303 4=-404.
-  switch (x) {
-    case 1:
-      this.x = -101;
-      break;
-    case 2:
-      this.x = -202;
-      break;
-    case 3:
-      this.x = -303;
-      break;
-    case 4:
-      this.x = -404;
-      break;
-  };
-
-  // assigns y to one of the three lanes. 1=63(Top lane), 2=146(middle lane) 3=229(bottom lane).
-  switch (y) {
-    case 1:
-      this.y = 63;
-      break;
-    case 2:
-      this.y = 146;
-      break;
-    case 3:
-      this.y = 229;
-      break;
-  };
-
+  let debugX = Math.floor(Math.random() * Math.floor(3)) + 1;
+  //console.log(debugX);
+  this.x = enemyStartX[debugX];
+  // assigns y to one of the three lanes. 63(Top lane), 146(middle lane) 229(bottom lane).
+  let debugY = Math.floor(Math.random() * Math.floor(3)) + 1;
+  //console.log(debugY);
+  this.y = enemyStartY[debugY];
   // assigns movement to one of four presets. 1=101, 2=202, 3=303 and 4=404.
-  switch (movement) {
-    case 1:
-      this.movement = 101;
-      break;
-    case 2:
-      this.movement = 202;
-      break;
-    case 3:
-      this.movement = 303;
-      break;
-    case 4:
-      this.movement = 404;
-      break;
-  };
-}
+  let debugMov = Math.floor(Math.random() * Math.floor(2)) + 1;
+  //console.log(debugMov);
+  this.movement = enemyStartMov[debugMov];
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -79,24 +48,15 @@ Enemy.prototype.render = function() {
 
 // Player function
 var Player = function() {
-  this.x = 202; // start 0 + 101 per column.
-  this.y = 373.5;// Start -41.5 + 83 per row.
+  this.reset();
   this.sprite = 'images/char-cat-girl.png';
   this.lives = 3;
-  this.livesDisplay = document.getElementById('lives');
+  this.livesDisplay = document.querySelector('.lives');
 };
 
 // Updates the player. Collision detection.
 Player.prototype.update = function(dt) {
-  allEnemies.forEach(function(enemy) {
-    if ((player.y + 21.5) === enemy.y){
-      // Body (not head) width of player seems to 33 and enemy is close to 100.
-      if ((player.x + 35 <= enemy.x + 98) && (player.x + 69 >= enemy.x + 2)) {
-        player.removeLife();
-        player.reset();
-      }
-    }
-  });
+  //console.log(this.x + ' ' + this.y);
 };
 
 //Render the image.
@@ -108,25 +68,25 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(keycode) {
   switch(keycode) {
     case 'left':
-      if (!((this.x - 101) < 0)) {
+      if ((this.x - 101) > 0) {
         this.x = this.x - 101;
-      };
+      }
       break;
     case 'right':
-      if (!((this.x + 101) > 404)) {
+      if ((this.x + 101) < 404) {
         this.x = this.x + 101;
       }
       break;
     case 'up':
-      if (!((this.y - 83) < 0)) {
+      if ((this.y - 83) > -83) {
         this.y = this.y - 83;
-      } else {
-        this.y = this.y - 83;
-        player.gameOver();
+        if (this.y === -41.5) {
+          this.gameOver();
+        }
       }
       break;
     case 'down':
-      if (!((this.y + 83) > 415)) {
+      if ((this.y + 83) < 415) {
         this.y = this.y + 83;
       }
       break;
@@ -137,17 +97,18 @@ Player.prototype.handleInput = function(keycode) {
 Player.prototype.reset = function() {
   this.x = 202;
   this.y = 373.5;
-}
+};
 
 //Shows lives of Player.
 Player.prototype.showLives = function () {
-  let livesEles = document.getElementsByClassName('liveimg');
-  let liveDisplay = document.getElementById('lives');
-  console.log(livesEles.length);
-  if (livesEles.length != 0) {
-    for (let i = 0; i <= livesEles.length; i++) {
-      liveDisplay.removeChild(livesEles[i]);
+  let liveDisplay = document.querySelector('.lives');
+  // Changed to be based on a idea from stackoverflow.
+  if (liveDisplay.firstChild) {
+    while (liveDisplay.firstChild) {
+      liveDisplay.removeChild(liveDisplay.firstChild);
     }
+  } else {
+    player.reset();
   }
   for (let i = 0; i < this.lives; i++) {
     let livesImg = document.createElement('img');
@@ -155,30 +116,29 @@ Player.prototype.showLives = function () {
     livesImg.setAttribute('alt', 'Life');
     livesImg.classList.add('liveimg');
     this.livesDisplay.appendChild(livesImg);
-  };
-}
+  }
+};
 
 Player.prototype.removeLife = function () {
   this.lives--;
   let aLife = this.livesDisplay.firstElementChild;
   this.livesDisplay.removeChild(aLife);
   if (this.lives === 0) {
-    console.log("Game Over!");
     player.gameOver();
   }
-}
+};
 
 Player.prototype.gameOver = function () {
-  let getOver = document.getElementById('gameOver');
-  let gameOverMsg = document.getElementById('gameOverMsg');
+  let gmOver = document.querySelector('.gameOver');
+  let gameOverMsg = document.querySelector('.gameOverMsg');
   if (this.lives > 0) {
     gameOverMsg.textContent = "You've Won!";
   } else {
-    gameOverMsg.textContent = "You've Lost!"
+    gameOverMsg.textContent = "You've Lost!";
   }
-  gameOver.classList.toggle("hidden");
-  gameOver.classList.toggle("shown");
-}
+  gmOver.classList.toggle("hidden");
+  gmOver.classList.toggle("shown");
+};
 
 //Instatiate player and enemies.
 var player = new Player();
@@ -189,13 +149,13 @@ for (let i = 0; i < totalEnemies; i++) {
   let enemy = new Enemy();
   enemy.setVariables();
   allEnemies.push(enemy);
-};
-var gameOverBtn = document.getElementById('gameOverBtn');
+}
+var gameOverBtn = document.querySelector('.gameOverBtn');
 gameOverBtn.addEventListener('click', function() {
   player.lives = 3;
   player.reset();
   player.showLives();
-  let gameOverBrd = document.getElementById('gameOver');
+  let gameOverBrd = document.querySelector('.gameOver');
   gameOverBrd.classList.toggle('hidden');
   gameOverBrd.classList.toggle('shown');
 });

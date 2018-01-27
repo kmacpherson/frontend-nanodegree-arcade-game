@@ -2,7 +2,7 @@ body {
     text-align: center;
 }
 
-#gameSpace {
+.gameSpace {
   width: 100%;
   display: flex;
   flex-flow: wrap;
@@ -11,13 +11,13 @@ body {
   z-index: 0;
 }
 
-#liveTitle {
+.liveTitle {
   width: 40%;
   text-align: right;
   font-size: 1.5em;
 }
 
-#lives {
+.lives {
   display: flex;
   width: 60%;
 }
@@ -30,7 +30,7 @@ body {
   width: auto;
 }
 
-#gameOver {
+.gameOver {
   z-index: 1;
   border: medium solid black;
 }
@@ -52,13 +52,13 @@ body {
   background-color: #d9dde2;
 }
 
-#gameOverMsg {
+.gameOverMsg {
   width: 100%;
   font-size: 5em;
   color: #e53e0b;
 }
 
-#gameOverBtn {
+.gameOverBtn {
   width: 50%;
   font-size: 3em;
 }

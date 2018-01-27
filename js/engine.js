@@ -22,8 +22,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        gameBoard = doc.getElementById('gameSpace'),
-        gameOverBrd = doc.getElementById('gameOver'),
+        gameBoard = doc.querySelector('.gameSpace'),
+        gameOverBrd = doc.querySelector('.gameOver'),
         lastTime;
 
     canvas.width = 505;
@@ -83,7 +83,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -123,7 +123,7 @@ var Engine = (function(global) {
             row, col;
 
         // Before drawing, clear existing canvas
-        ctx.clearRect(0,0,canvas.width,canvas.height)
+        ctx.clearRect(0,0,canvas.width,canvas.height);
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
@@ -145,6 +145,17 @@ var Engine = (function(global) {
         renderEntities();
     }
 
+    function checkCollisions() {
+      allEnemies.forEach(function(enemy) {
+        if ((player.y + 21.5) === enemy.y){
+          // Body (not head) width of player seems to 33 and enemy is close to 100.
+          if ((player.x + 35 <= enemy.x + 98) && (player.x + 69 >= enemy.x + 2)) {
+            player.removeLife();
+            player.reset();
+          }
+        }
+      });
+    }
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
      * on your enemy and player entities within app.js
